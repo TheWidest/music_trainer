@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"slices"
-	"strconv"
+	//"strconv"
 	"bufio"
 	"os"
 	"log"
@@ -13,8 +13,27 @@ import (
 
 const frets = 22
 
-func printer(sheet *[][]string) {
-
+func printer(sheet [][]int) {
+	fmt.Print("\n")
+	for i := 0; i < len(sheet[0]); i++ {
+		fmt.Print("_")
+		for j := 0; j < len(sheet); j++ {
+			switch {
+			case sheet[j][i] == -2:
+				fmt.Print("__")
+			case sheet[j][i] == -1:
+				fmt.Print("_0")
+			case sheet[j][i] < 10:
+				fmt.Print("_", sheet[j][i])
+			default:
+				fmt.Print(sheet[j][i])
+			}
+			if j < len(sheet) - 1 {
+				fmt.Print("__")
+			}
+		}
+		fmt.Print("\n")
+	}
 }
 
 func flute_trainer() {
@@ -22,7 +41,10 @@ func flute_trainer() {
 }
 
 func guitar_trainer() {
-	var sheet [10][6]string
+	sheet := make([][]int, 10)
+	for i := range sheet {
+		sheet[i] = make([]int, 6)
+	}
 	chords_set := []string{"y", "yes"}
 	no_chords_set := []string{"n", "no"}
 	var chords bool
@@ -95,18 +117,18 @@ func guitar_trainer() {
 				for i := 0; i < 6; i++ {
 					switch {
 					case chord_buffer[i] == -2:
-						sheet[k][i] = "_"
+						sheet[k][i] = -2
 					case chord_buffer[i] == -1:
-						sheet[k][i] = "0"
+						sheet[k][i] = -1
 					case chord_buffer[i] < 5:
-						sheet[k][i] = strconv.Itoa(anchor_fret + chord_buffer[i])
+						sheet[k][i] = anchor_fret + chord_buffer[i]
 					default:
 						log.Fatal()
 					}
 				}
 				
 			}
-			fmt.Println(sheet)
+			printer(sheet)
 			_, err := bufio.NewReader(os.Stdin).ReadString('\n')
 			if err != nil {
 				log.Fatal(err)
