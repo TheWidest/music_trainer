@@ -28,7 +28,7 @@ func printer(sheet [][]int) {
 			default:
 				fmt.Print(" ", sheet[j][i])
 			}
-			if j < len(sheet) - 1 {		w
+			if j < len(sheet) - 1 {
 				fmt.Print("————")
 			}
 		}
@@ -118,20 +118,7 @@ func guitar_trainer() {
 						}
 					}
 				}
-				fmt.Println("4_________")
 				sheet[k] = chord_buffer
-				// for i := 0; i < 6; i++ {
-				// 	switch {
-				// 	case chord_buffer[i] == -2:
-				// 		sheet[k][i] = -2
-				// 	case chord_buffer[i] == -1:
-				// 		sheet[k][i] = -1
-				// 	case chord_buffer[i] < 5:
-				// 		sheet[k][i] = anchor_fret + chord_buffer[i]
-				// 	default:
-				// 		log.Fatal()
-				// 	}
-				// }
 			}
 			printer(sheet)
 			_, err := bufio.NewReader(os.Stdin).ReadString('\n')
