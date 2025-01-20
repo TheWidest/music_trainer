@@ -8,6 +8,7 @@ import (
 	"os"
 	"log"
 	"strings"
+	"math"
 	"math/rand"
 )
 
@@ -119,6 +120,7 @@ func guitar_trainer() {
 					}
 				}
 				sheet[k] = chord_buffer
+				anchor_fret = int(math.Abs(float64((anchor_fret + int(rand.NormFloat64()*5)) % frets)))
 			}
 			printer(sheet)
 			_, err := bufio.NewReader(os.Stdin).ReadString('\n')
