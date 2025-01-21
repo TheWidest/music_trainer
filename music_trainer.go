@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"slices"
-	//"strconv"
 	"bufio"
 	"os"
 	"log"
@@ -20,14 +19,12 @@ func printer(sheet [][]int) {
 		fmt.Print("—")
 		for j := 0; j < len(sheet); j++ {
 			switch {
-			case sheet[j][i] == -2:
-				fmt.Print("———")
 			case sheet[j][i] == -1:
-				fmt.Print("— 0")
+				fmt.Print("———")
 			case sheet[j][i] < 10:
 				fmt.Print("——", sheet[j][i])
 			default:
-				fmt.Print(" ", sheet[j][i])
+				fmt.Print("—", sheet[j][i])
 			}
 			if j < len(sheet) - 1 {
 				fmt.Print("————")
@@ -38,7 +35,12 @@ func printer(sheet [][]int) {
 }
 
 func flute_trainer() {
-	fmt.Println("Flute Trainer")
+	fmt.Println("flute dud")
+	// number_of_attacks := 10
+	// sheet := make([][]int, number_of_attacks)
+	// for i := range sheet {
+	// 	sheet[i] = make([]int, 6)
+	// }
 }
 
 func guitar_trainer() {
@@ -83,8 +85,7 @@ func guitar_trainer() {
 					chord_buffer[i] = 99
 				}
 				//99 - untouched cell
-				//-2 - skip
-				//-1 - 0th fret 
+				//-1 - skip 
 
 				for i := 0; i < 3 + third_finger + fourth_finger; i++ { //'places fingers on strings'
 					for {
@@ -113,9 +114,9 @@ func guitar_trainer() {
 				for i := 0; i < 6; i++ {
 					if chord_buffer[i] == 99 {
 						if rand_bool(1, 4) {
-							chord_buffer[i] = -1
+							chord_buffer[i] = 0
 						} else {
-							chord_buffer[i] = -2
+							chord_buffer[i] = -1
 						}
 					}
 				}
@@ -129,32 +130,49 @@ func guitar_trainer() {
 			}
 		}
 	} else {
-		fmt.Println("single note")
-	}
+		for {
+			fret := int(rand.Int31n(23))
+			for k := 0; k < number_of_attacks; k++ {
+				buff_attack := make([]int, 6)
+				for i := 0; i < 6; i++ {
+					buff_attack[i] = -1
+				}
+				fret = int(math.Abs(float64((fret + int(rand.NormFloat64()*9)) % frets)))
+				buff_attack[int(rand.Int31n(6))] = fret
+				sheet[k] = buff_attack
+			}
 
+			printer(sheet)
+			_, err := bufio.NewReader(os.Stdin).ReadString('\n')
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
 }
 
-func initiator(inst_letter *string) {
+func initiator() {
 	inst_options := []string{"f", "g"} // f - flute, g - guitar
+	var str string
 
 	fmt.Println("Choose the instrument")
 	fmt.Println("f - flute, g - guitar")
-	flag := false
-	for flag == false {
-		str, err := bufio.NewReader(os.Stdin).ReadString('\n')
+
+	for {
+		str_buf, err := bufio.NewReader(os.Stdin).ReadString('\n')
 		if err != nil {
 			log.Fatal(err)
 		}
-		str = strings.TrimSpace(str)
-		str = strings.ToLower(str)
-		if slices.Contains(inst_options, str) {
-			*inst_letter = str
-			flag = true
+		str_buf = strings.TrimSpace(str_buf)
+		str_buf = strings.ToLower(str_buf)
+		if slices.Contains(inst_options, str_buf) {
+			str = str_buf
+			break
 		} else {
 			fmt.Println("that's not a valid option")
 		}
 	}
-	switch *inst_letter {
+	switch str {
 	case "f":
 		flute_trainer()
 	case "g":
@@ -163,11 +181,7 @@ func initiator(inst_letter *string) {
 }
 
 func main() {
-	var letter string
-
-	initiator(&letter)
-
-	//fmt.Println(letter)
+	initiator()
 }
 
 func rand_bool(numerator int, denominator int) bool {
