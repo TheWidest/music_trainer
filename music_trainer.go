@@ -11,6 +11,7 @@ import (
 	"math"
 	"math/rand"
 )
+
 func printer(sheet [][]int) {
 	fmt.Print("\n\n\n")
 	for i := 0; i < len(sheet[0]); i++ {
@@ -40,45 +41,10 @@ func flute_trainer() {
 }
 
 func stringed_trainer(frets int, num_of_strings int, instrument string) {
-	chords_set := []string{"y", "yes"}
-	no_chords_set := []string{"n", "no"}
-	var chords bool
+	var chords = chords()
 
-	fmt.Println("Do you want to use chords?")
-	for {
-		str, err := bufio.NewReader(os.Stdin).ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
-		str = strings.TrimSpace(str)
-		str = strings.ToLower(str)
-		if slices.Contains(chords_set, str) {
-			chords = true
-			break
-		} else if slices.Contains(no_chords_set, str) {
-			chords = false
-			break
-		} else {
-			fmt.Println("That's not a valid answer. Try 'y', 'yes', 'n' or 'no'")
-		}
-	}
+	var number_of_attacks = number_of_attacks()
 
-	fmt.Println("How many attacks should there be in a set?")
-	var number_of_attacks int
-	for {
-		str, err := bufio.NewReader(os.Stdin).ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
-		str = strings.TrimSpace(str)
-
-		if number_of_attacks_buf, err := strconv.Atoi(str); err == nil {
-			number_of_attacks = number_of_attacks_buf
-			break
-		} else {
-			fmt.Println("That's not a valid number, try again")
-		}
-	}
 	sheet := make([][]int, number_of_attacks)
 	for i := range sheet {
 		sheet[i] = make([]int, num_of_strings)
@@ -202,11 +168,11 @@ func stringed_trainer(frets int, num_of_strings int, instrument string) {
 }
 
 func initiator() {
-	inst_options := []string{"f", "g", "b"} // f - flute, g - guitar, b - bass
+	inst_options := []string{"f", "g", "b", "b5"} // f - flute, g - guitar, b - bass, b5 - 5-stringed bass
 	var str string
 
 	fmt.Println("Choose the instrument")
-	fmt.Println("f - flute, g - guitar, b - bass")
+	fmt.Println("g - guitar, b - bass")
 
 	for {
 		str_buf, err := bufio.NewReader(os.Stdin).ReadString('\n')
@@ -229,6 +195,8 @@ func initiator() {
 		stringed_trainer(22, 6, "guitar")
 	case "b":
 		stringed_trainer(20, 4, "bass")
+	case "b5":
+		stringed_trainer(20, 5, "bass")
 	}
 }
 
@@ -241,5 +209,44 @@ func rand_bool(numerator int, denominator int) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+func chords() bool {
+	chords_set := []string{"y", "yes"}
+	no_chords_set := []string{"n", "no"}
+
+	fmt.Println("Do you want to use chords?")
+	for {
+		str, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+		str = strings.TrimSpace(str)
+		str = strings.ToLower(str)
+		if slices.Contains(chords_set, str) {
+			return true
+		} else if slices.Contains(no_chords_set, str) {
+			return false
+		} else {
+			fmt.Println("That's not a valid answer. Try 'y', 'yes', 'n' or 'no'")
+		}
+	}
+}
+
+func number_of_attacks() int {
+	fmt.Println("How many attacks should there be in a set?")
+	for {
+		str, err := bufio.NewReader(os.Stdin).ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+		str = strings.TrimSpace(str)
+
+		if number_of_attacks_buf, err := strconv.Atoi(str); err == nil {
+			return number_of_attacks_buf
+		} else {
+			fmt.Println("That's not a valid number, try again")
+		}
 	}
 }
