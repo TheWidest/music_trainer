@@ -32,6 +32,7 @@ func printer(sheet [][]int) {
 }
 
 func flute_trainer() {
+	var number_of_attacks = number_of_attacks()
 	fmt.Println("flute dud")
 	// number_of_attacks := 10
 	// sheet := make([][]int, number_of_attacks)
